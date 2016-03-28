@@ -4,7 +4,7 @@ product_version: 0.0.1$PRERELEASE_VERSION$
 metadata_version: '1.6'
 stemcell_criteria:
   os: ubuntu-trusty
-  version: '3202'
+  version: '3215'
   requires_cpi: false
 icon_image: |
   iVBORw0KGgoAAAANSUhEUgAAAHgAAACRCAIAAACHTevPAAAAAXNSR0IArs4c6QAA

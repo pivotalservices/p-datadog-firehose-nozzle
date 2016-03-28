@@ -96,8 +96,8 @@ job_types:
 
     manifest: |
       datadog:
-        api_key: (( .properties.datadog_api_key ))
-        api_url: (( .properties.datadog_api_url ))
+        api_key: (( .properties.datadog_api_key.value ))
+        api_url: (( .properties.datadog_api_url.value ))
         flush_duration_seconds: 15
         metric_prefix: datadog.nozzle.
       loggregator:
@@ -108,9 +108,9 @@ job_types:
         insecure_ssl_skip_verify: (( .properties.skip_cert_verify.value ))
         subscription_id: datadog-nozzle
       uaa:
-        password: (( .properties.datadog_uaa_secret ))
+        password: (( .properties.datadog_uaa_secret.value ))
         url: https://uaa.(( $runtime.system_domain ))
-        username: (( .properties.datadog_uaa_username ))
+        username: (( .properties.datadog_uaa_id.value))
   - name: compilation
     label: Compilation
     resource_label: Compilation
