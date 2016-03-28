@@ -1,0 +1,10 @@
+releases/
+stemcells/
+compiled_packages/
+content_migrations/migrations.yml
+*.zip
+*.pivotal
+*.pivotal.yml
+*.pivotal.md5
+metadata.yml
+metadata/datadog_firehose_nozzle.yml

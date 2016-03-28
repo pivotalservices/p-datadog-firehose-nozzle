@@ -1,0 +1,5 @@
+---
+product: datadog-firehose-nozzle
+installation_version: '1.6'
+to_version: 0.0.1$PRERELEASE_VERSION$
+migrations: []

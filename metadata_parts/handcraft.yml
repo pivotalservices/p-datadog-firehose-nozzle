@@ -1,0 +1,155 @@
+---
+label: datadog firehose nozzle
+description: Deploy datadog firehose nozzle
+rank: 50
+
+form_types:
+  - name: Datadog
+    label: Datadog
+    description: Datadog configuration
+    property_inputs:
+      - reference: .properties.datadog_api_url
+        label: API URL
+      - reference: .properties.datadog_api_key
+        label: API KEY
+  - name: UaaClient
+    label: UAA Client
+    description: Uaa Client configuration
+    property_inputs:
+      - reference: .properties.datadog_uaa_id
+        label: ID
+      - reference: .properties.datadog_uaa_secret
+        label: SECRET
+      - reference: .properties.skip_cert_verify
+        label: Skip Cert Verify
+
+property_blueprints:
+  - name: datadog_api_url
+    type: string
+    configurable: true
+  - name: datadog_api_key
+    type: secret
+    configurable: true
+  - name: datadog_uaa_id
+    type: string
+    configurable: true
+  - name: datadog_uaa_secret
+    type: secret
+    configurable: true
+  - name: skip_cert_verify
+    type: boolean
+    configurable: true
+
+job_types:
+  - name: datadog-firehose-nozzle
+    resource_label: datadog nozzle
+    templates:
+    - name: datadog-firehose-nozzle
+      release: datadog-firehose-nozzle
+    resource_definitions:
+      - name: ram
+        type: integer
+        label: RAM
+        configurable: true
+        default: 2_048
+        constraints:
+          min: 1_024
+
+      - name: ephemeral_disk
+        type: integer
+        label: Ephemeral Disk
+        configurable: true
+        default: 20_480
+        constraints:
+          min: 20_480
+
+      - name: persistent_disk
+        type: integer
+        label: Persistent Disk
+        configurable: true
+        default: 1024
+        constraints:
+          min: 1024
+
+      - name: cpu
+        type: integer
+        label: CPU
+        configurable: true
+        default: 2
+        constraints:
+          min: 2
+          power_of_two: true
+    static_ip: 0
+    dynamic_ip: 1
+    max_in_flight: 1
+    instance_definitions:
+      - name: instances
+        type: integer
+        label: Instances
+        configurable: false
+        default: 1
+    property_blueprints:
+      - name: vm_credentials
+        type: salted_credentials
+        default:
+          identity: vcap
+
+    manifest: |
+      datadog:
+        api_key: (( .properties.datadog_api_key ))
+        api_url: (( .properties.datadog_api_url ))
+        flush_duration_seconds: 15
+        metric_prefix: datadog.nozzle.
+      loggregator:
+        traffic_controller_url: "wss://doppler.(( $runtime.system_domain )):(( ..cf.properties.logger_endpoint_port.value ))"
+      nozzle:
+        deployment: datadog-nozzle
+        disable_access_control: null
+        insecure_ssl_skip_verify: (( .properties.skip_cert_verify.value ))
+        subscription_id: datadog-nozzle
+      uaa:
+        password: (( .properties.datadog_uaa_secret ))
+        url: https://uaa.(( $runtime.system_domain ))
+        username: (( .properties.datadog_uaa_username ))
+  - name: compilation
+    label: Compilation
+    resource_label: Compilation
+    description: Compilation
+    static_ip: 0
+    dynamic_ip: 1
+    max_in_flight: 1
+    resource_definitions:
+      - name: ram
+        type: integer
+        label: RAM
+        configurable: true
+        default: 2048
+        constraints:
+          min: 1024
+      - name: ephemeral_disk
+        type: integer
+        label: Ephemeral Disk
+        configurable: true
+        default: 8192
+        constraints:
+          min: 4096
+      - name: persistent_disk
+        type: integer
+        label: Persistent Disk
+        configurable: false
+        default: 0
+      - name: cpu
+        type: integer
+        label: CPU
+        configurable: true
+        default: 1
+        constraints:
+          min: 1
+    instance_definitions:
+      - name: instances
+        type: integer
+        label: Instances
+        default: 1
+        configurable: false
+        constraints:
+          min: 1
