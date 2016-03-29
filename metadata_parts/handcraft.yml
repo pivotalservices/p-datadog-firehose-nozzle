@@ -12,6 +12,8 @@ form_types:
         label: API URL
       - reference: .properties.datadog_api_key
         label: API KEY
+      - reference: .properties.datadog_metric_prefix
+        label: Metric Prefix
   - name: UaaClient
     label: UAA Client
     description: Uaa Client configuration
@@ -30,6 +32,9 @@ property_blueprints:
   - name: datadog_api_key
     type: secret
     configurable: true
+  - name: datadog_metric_prefix
+    type: string
+    configurable: true    
   - name: datadog_uaa_id
     type: string
     configurable: true
@@ -99,7 +104,7 @@ job_types:
         api_key: (( .properties.datadog_api_key.value ))
         api_url: (( .properties.datadog_api_url.value ))
         flush_duration_seconds: 15
-        metric_prefix: datadog.nozzle.
+        metric_prefix: (( .properties.datadog_metric_prefix.value ))
       loggregator:
         traffic_controller_url: "wss://doppler.(( $runtime.system_domain )):(( ..cf.properties.logger_endpoint_port.value ))"
       nozzle:
