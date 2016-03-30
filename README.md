@@ -35,3 +35,11 @@ uaac client add datadog-firehose-nozzle \
 
 * Apply changes and validate the metrics sent to datadog
 ![](images/datadog-metrics.png)
+
+## Known issue
+
+* The elastic runtime (ER) tile loggregator endpoint port has to be configured
+
+If the filed is blank, the web socket endpoint can not be configured correctly
+
+![](images/loggregator_port.png)
